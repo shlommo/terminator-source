@@ -2,6 +2,7 @@ const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const fs = require('fs');
 
 function generateHtmlPlugins(templateDir) {
@@ -73,6 +74,14 @@ module.exports = {
     new ExtractTextPlugin({
       filename: './css/style.min.css',
       allChunks: true,
-    })
+    }),
+    new CopyWebpackPlugin([{
+      from: './src/fonts',
+      to: './fonts'
+    },
+    {
+      from: './src/img',
+      to: './img'
+    }])
   ].concat(htmlPlugins)
 };
