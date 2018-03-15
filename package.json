@@ -7,7 +7,9 @@
     "dev": "webpack --mode development",
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch",
-    "start": "webpack-dev-server --mode development --open"
+    "start": "webpack-dev-server --mode development --open",
+    "build-and-beautify": "webpack --mode production && html dist/*.html --indent-size 2",
+    "beautify": "html dist/*.html --indent-size 2"
   },
   "author": "Sayan Zhakupbekov",
   "license": "ISC",
@@ -18,6 +20,8 @@
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^0.28.10",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "html-cli": "^1.0.0",
+    "html-webpack-plugin": "^3.0.6",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.7",
     "webpack": "^4.1.1",
