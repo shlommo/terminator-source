@@ -19,58 +19,6 @@
 
 // draw(player, ctx);
 
-
-function main() {
-  const canvas = document.getElementById('canvasForVideo');
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  const video = document.getElementById('player');
-
-  const navigatorConfig = {
-    audio: true,
-    video: {
-      width: canvas.width,
-      height: canvas.height
-    }
-  }
-  navigator.mediaDevices.getUserMedia(navigatorConfig)
-  .then((stream) => {
-    player.src = URL.createObjectURL(stream);
-  });
-
-  if (!gl) {
-    alert('Ваш браузер слишком стар для этого.');
-    return;
-  }
-
-  let GL_TIME = 0;
-
-  function postprocessWebGL(canvas, gl, sourceCanvas, delta) {
-      GL_TIME += delta;
-      gl.uniform1f(GL_TIME_UNIFORM, GL_TIME / 1000);
-
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sourceCanvas);
-      gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.enable(gl.DEPTH_TEST);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLES, 0, 6);
-  }
-
-  let PREVIOUS_T = 0;
-
-  function mainLoop(t) {
-      let delta = t - PREVIOUS_T;
-      PREVIOUS_T = t;
-
-      // postprocess(canvas, context, overlayCanvas);
-      postprocessWebGL(canvas, gl, video, delta);
-
-      requestAnimationFrame(mainLoop);
-  }
-
-  prepareWebGL(gl);
-  requestAnimationFrame(mainLoop);
-}
-
 let GL_TIME_UNIFORM = null;
 
 function prepareWebGL(gl) {
@@ -115,13 +63,13 @@ function prepareWebGL(gl) {
 
   const vsBuffer = gl.createBuffer();
   const vertices = [
-      -1, -1,
-      1, -1,
-      -1, 1,
-      -1, 1,
-      1, -1,
-      1, 1
-  ];
+    -1, -1,
+    1, -1,
+    -1, 1,
+    -1, 1,
+    1, -1,
+    1, 1];
+
   gl.bindBuffer(gl.ARRAY_BUFFER, vsBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(positionLocation);
@@ -129,13 +77,12 @@ function prepareWebGL(gl) {
 
   const txBuffer = gl.createBuffer();
   const textureCoordinates = [
-      0, 1,
-      1, 1,
-      0, 0,
-      0, 0,
-      1, 1,
-      1, 0
-  ];
+    0, 1,
+    1, 1,
+    0, 0,
+    0, 0,
+    1, 1,
+    1, 0];
   gl.bindBuffer(gl.ARRAY_BUFFER, txBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(texcoordLocation);
@@ -147,6 +94,57 @@ function prepareWebGL(gl) {
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+}
+
+let GL_TIME = 0;
+
+function postprocessWebGL(canvas, gl, sourceCanvas, delta) {
+  GL_TIME += delta;
+  gl.uniform1f(GL_TIME_UNIFORM, GL_TIME / 1000);
+
+  gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sourceCanvas);
+  gl.viewport(0, 0, canvas.width, canvas.height);
+  gl.enable(gl.DEPTH_TEST);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  gl.drawArrays(gl.TRIANGLES, 0, 6);
+}
+
+function main() {
+  const canvas = document.getElementById('canvasForVideo');
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  const video = document.getElementById('player');
+
+  const navigatorConfig = {
+    audio: true,
+    video: {
+      width: canvas.width,
+      height: canvas.height
+    }
+  };
+  navigator.mediaDevices.getUserMedia(navigatorConfig)
+    .then((stream) => {
+      video.src = URL.createObjectURL(stream);
+    });
+
+  if (!gl) {
+    alert('Ваш браузер слишком стар для этого.');
+    return;
+  }
+
+  let PREVIOUS_T = 0;
+
+  function mainLoop(t) {
+    const delta = t - PREVIOUS_T;
+    PREVIOUS_T = t;
+
+    // postprocess(canvas, context, overlayCanvas);
+    postprocessWebGL(canvas, gl, video, delta);
+
+    requestAnimationFrame(mainLoop);
+  }
+
+  prepareWebGL(gl);
+  requestAnimationFrame(mainLoop);
 }
 
 main();
