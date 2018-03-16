@@ -1,4 +1,5 @@
-import snoice from './snoice';
+import snoice from './tools/snoice';
+import random from './tools/random';
 
 const fsSource = `precision highp float;
                   varying vec2 v_texcoord;
@@ -9,17 +10,14 @@ const fsSource = `precision highp float;
                   const float interval = 3.0;
 
                   ${snoice}
-
-                  float rand(vec2 co){
-                    return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-                  }
+                  ${random}
 
                   void main() {
                     float strength = smoothstep(interval * 0.5, interval, interval - mod(u_time, interval));
 
                     vec2 shake = vec2(strength * 8.0 + 0.5) * vec2(
-                      rand(vec2(u_time)) * 2.0 - 1.0,
-                      rand(vec2(u_time * 2.0)) * 2.0 - 1.0
+                      random(vec2(u_time)) * 2.0 - 1.0,
+                      random(vec2(u_time * 2.0)) * 2.0 - 1.0
                     ) / u_resolution;
 
                     float y = v_texcoord.y * u_resolution.y;
@@ -35,7 +33,7 @@ const fsSource = `precision highp float;
                     float g = texture2D(u_texture, vec2(rgbUvX, v_texcoord.y) + shake).g;
                     float b = texture2D(u_texture, vec2(rgbUvX - rgbDiff, v_texcoord.y) + shake).b;
 
-                    float whiteNoise = (rand(v_texcoord + mod(u_time, 10.0)) * 2.0 - 1.0) * (0.1 + strength * 0.15);
+                    float whiteNoise = (random(v_texcoord + mod(u_time, 10.0)) * 2.0 - 1.0) * (0.1 + strength * 0.15);
 
                     float bnTime = floor(u_time * 20.0) * 200.0;
                     float noiseX = step((snoise(vec3(0.0, v_texcoord.x * 3.0, bnTime)) + 1.0) / 2.0, 0.12 + strength * 0.3);
