@@ -43,7 +43,7 @@ const fsSource = `precision highp float;
                     float bnR = texture2D(u_texture, vec2(bnUvX + rgbDiff, v_texcoord.y)).r * bnMask;
                     float bnG = texture2D(u_texture, vec2(bnUvX, v_texcoord.y)).g * bnMask;
                     float bnB = texture2D(u_texture, vec2(bnUvX - rgbDiff, v_texcoord.y)).b * bnMask;
-                    vec4 blockNoise = vec4(bnR, bnG, bnB, 1.0);
+                    vec4 blockNoise = vec4(bnR, 0, 0, 1.0);
 
                     float bnTime2 = floor(u_time * 25.0) * 300.0;
                     float noiseX2 = step((snoise(vec3(0.0, v_texcoord.x * 2.0, bnTime2)) + 1.0) / 2.0, 0.12 + strength * 0.5);
@@ -52,11 +52,11 @@ const fsSource = `precision highp float;
                     float bnR2 = texture2D(u_texture, vec2(bnUvX + rgbDiff, v_texcoord.y)).r * bnMask2;
                     float bnG2 = texture2D(u_texture, vec2(bnUvX, v_texcoord.y)).g * bnMask2;
                     float bnB2 = texture2D(u_texture, vec2(bnUvX - rgbDiff, v_texcoord.y)).b * bnMask2;
-                    vec4 blockNoise2 = vec4(bnR2, bnG2, bnB2, 1.0);
+                    vec4 blockNoise2 = vec4(bnR2, 0, 0, 1.0);
 
                     float waveNoise = (sin(v_texcoord.y * 1200.0) + 1.0) / 2.0 * (0.1 + strength * 0.1);
 
-                    gl_FragColor = vec4(r, g, b, 1.0) * (1.0 - bnMask - bnMask2) + (whiteNoise + blockNoise + blockNoise2 - waveNoise);
+                    gl_FragColor = vec4(r, 0, 0, 1.0) * (1.0 - bnMask - bnMask2) + (whiteNoise + blockNoise + blockNoise2 - waveNoise);
                   }`;
 
 export default fsSource;
