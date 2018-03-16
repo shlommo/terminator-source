@@ -1,51 +1,15 @@
-// const player = document.getElementById('player');
-// const canvas = document.getElementById('canvasForVideo');
-// const ctx = canvas.getContext('2d');
-
-// canvas.width = window.innerWidth;
-// canvas.height = window.innerHeight;
-
-// navigator.mediaDevices.getUserMedia({ audio: true, video: true })
-//   .then((stream) => {
-//     player.src = URL.createObjectURL(stream);
-//   });
-
-// function draw(video, canvasContext) {
-//   canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
-//   requestAnimationFrame(() => {
-//     draw(video, canvasContext);
-//   });
-// }
-
-// draw(player, ctx);
+import vsSource from './glsl/vs-source';
+import fsSource from './glsl/fs-source';
 
 let GL_TIME_UNIFORM = null;
+let GL_RESOLUTION_UNIFORM = null;
 
 function prepareWebGL(gl) {
   const program = gl.createProgram();
 
-  const vsSource = `attribute vec2 coordinates;
-                    attribute vec2 texture_coordinates;
-                    varying vec2 v_texcoord;
-                    void main() {
-                      gl_Position = vec4(coordinates,0.0, 1.0);
-                      v_texcoord = texture_coordinates;
-                    }`;
-
   const vertexShader = gl.createShader(gl.VERTEX_SHADER);
   gl.shaderSource(vertexShader, vsSource);
   gl.compileShader(vertexShader);
-
-  const fsSource = `precision mediump float;
-                    varying vec2 v_texcoord;
-                    uniform sampler2D u_texture;
-                    uniform float u_time;
-                    float rand(vec2 co){
-                      return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
-                    }
-                    void main() {
-                      gl_FragColor = texture2D(u_texture, v_texcoord) * .9 + texture2D(u_texture, v_texcoord) * rand(v_texcoord * u_time) * .2;
-                    }`;
 
   const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
   gl.shaderSource(fragmentShader, fsSource);
@@ -60,6 +24,7 @@ function prepareWebGL(gl) {
   const positionLocation = gl.getAttribLocation(program, 'coordinates');
   const texcoordLocation = gl.getAttribLocation(program, 'texture_coordinates');
   GL_TIME_UNIFORM = gl.getUniformLocation(program, 'u_time');
+  GL_RESOLUTION_UNIFORM = gl.getUniformLocation(program, 'u_resolution');
 
   const vsBuffer = gl.createBuffer();
   const vertices = [
@@ -68,7 +33,8 @@ function prepareWebGL(gl) {
     -1, 1,
     -1, 1,
     1, -1,
-    1, 1];
+    1, 1
+  ];
 
   gl.bindBuffer(gl.ARRAY_BUFFER, vsBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
@@ -82,7 +48,9 @@ function prepareWebGL(gl) {
     0, 0,
     0, 0,
     1, 1,
-    1, 0];
+    1, 0
+  ];
+
   gl.bindBuffer(gl.ARRAY_BUFFER, txBuffer);
   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(textureCoordinates), gl.STATIC_DRAW);
   gl.enableVertexAttribArray(texcoordLocation);
@@ -99,8 +67,10 @@ function prepareWebGL(gl) {
 let GL_TIME = 0;
 
 function postprocessWebGL(canvas, gl, sourceCanvas, delta) {
+  const resolution = [window.innerWidth, window.innerHeight];
   GL_TIME += delta;
   gl.uniform1f(GL_TIME_UNIFORM, GL_TIME / 1000);
+  gl.uniform2fv(GL_RESOLUTION_UNIFORM, new Float32Array(resolution));
 
   gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, sourceCanvas);
   gl.viewport(0, 0, canvas.width, canvas.height);
@@ -109,23 +79,7 @@ function postprocessWebGL(canvas, gl, sourceCanvas, delta) {
   gl.drawArrays(gl.TRIANGLES, 0, 6);
 }
 
-function main() {
-  const canvas = document.getElementById('canvasForVideo');
-  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-  const video = document.getElementById('player');
-
-  const navigatorConfig = {
-    audio: true,
-    video: {
-      width: canvas.width,
-      height: canvas.height
-    }
-  };
-  navigator.mediaDevices.getUserMedia(navigatorConfig)
-    .then((stream) => {
-      video.src = URL.createObjectURL(stream);
-    });
-
+function main(canvas, gl, video) {
   if (!gl) {
     alert('Ваш браузер слишком стар для этого.');
     return;
@@ -147,4 +101,19 @@ function main() {
   requestAnimationFrame(mainLoop);
 }
 
-main();
+const canvas = document.getElementById('canvasForVideo');
+const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+const video = document.getElementById('player');
+
+const navigatorConfig = {
+  audio: true,
+  video: {
+    width: canvas.width,
+    height: canvas.height
+  }
+};
+navigator.mediaDevices.getUserMedia(navigatorConfig)
+  .then((stream) => {
+    video.src = URL.createObjectURL(stream);
+    main(canvas, gl, video);
+  });
