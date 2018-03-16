@@ -11,7 +11,7 @@ body {
   min-width: 320px;
   font-size: 16px;
   font-family: "Roboto", sans-serif;
-  // background-color: yellow;
+  background-color: black;
 }
 
 .demo__video {
@@ -21,4 +21,6 @@ body {
 .demo__canvas {
   width: 100vw;
   height: 100vh;
+  min-width: 900px;
+  min-height: 600px;
 }
