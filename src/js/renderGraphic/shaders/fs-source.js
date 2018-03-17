@@ -32,6 +32,7 @@ const fsSource = `precision highp float;
                     float r = texture2D(u_texture, vec2(rgbUvX + rgbDiff, v_texcoord.y) + shake).r;
                     float g = texture2D(u_texture, vec2(rgbUvX, v_texcoord.y) + shake).g;
                     float b = texture2D(u_texture, vec2(rgbUvX - rgbDiff, v_texcoord.y) + shake).b;
+                    float grayScale = (r + g + b) / 3.0;
 
                     float whiteNoise = (random(v_texcoord + mod(u_time, 10.0)) * 2.0 - 1.0) * (0.1 + strength * 0.15);
 
@@ -56,7 +57,7 @@ const fsSource = `precision highp float;
 
                     float waveNoise = (sin(v_texcoord.y * 1200.0) + 1.0) / 2.0 * (0.1 + strength * 0.1);
 
-                    gl_FragColor = vec4(r, 0, 0, 1.0) * (1.0 - bnMask - bnMask2) + (whiteNoise + blockNoise + blockNoise2 - waveNoise);
+                    gl_FragColor = vec4(grayScale, 0, 0, 1.0) * (1.0 - bnMask - bnMask2) + (whiteNoise + blockNoise + blockNoise2 - waveNoise);
                   }`;
 
 export default fsSource;
