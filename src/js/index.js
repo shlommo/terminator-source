@@ -1,14 +1,14 @@
 import renderGraphic from './renderGraphic/index';
 
-const canvas = document.getElementById('canvasForVideo');
+const canvas = document.getElementById('canvasStreaming');
 const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
 const video = document.getElementById('player');
 
 const navigatorConfig = {
   audio: true,
   video: {
-    width: canvas.width,
-    height: canvas.height
+    width: window.innerWidth,
+    height: window.innerHeight
   }
 };
 
