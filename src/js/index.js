@@ -5,7 +5,7 @@ const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl')
 const video = document.getElementById('player');
 
 const navigatorConfig = {
-  audio: true,
+  audio: false,
   video: {
     width: window.innerWidth,
     height: window.innerHeight
