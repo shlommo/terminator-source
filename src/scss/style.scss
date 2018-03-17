@@ -10,8 +10,15 @@ body {
 body {
   min-width: 320px;
   font-size: 16px;
-  font-family: "Roboto", sans-serif;
+  font-family: "Apple", sans-serif;
   background-color: black;
+}
+
+.demo {
+  position: relative;
+  font-family: "Apple", sans-serif;
+  font-weight: 400;
+  font-size: 1px;
 }
 
 .demo__video {
@@ -27,4 +34,12 @@ body {
 
 .demo__canvas--back-layer {
   display: none;
+}
+
+.demo__canvas--interface-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  z-index: 2;
 }
