@@ -1,6 +1,7 @@
 import prepareWebGL from './prepare-webgl';
-import postprocess from './postprocess';
+import renderInterface from './render-interface';
 import postprocessWebGL from './postprocess-webgl';
+
 
 const canvasBackLayer = document.getElementById('canvasBackLayer');
 
@@ -12,13 +13,12 @@ function renderGraphic(canvas, gl, video) {
     return;
   }
 
+  renderInterface(canvasBackLayer);
+
   function mainLoop(t) {
     const delta = t - PREVIOUS_T;
     PREVIOUS_T = t;
-
-    postprocess(canvasBackLayer);
     postprocessWebGL(canvas, gl, video, delta);
-
     requestAnimationFrame(mainLoop);
   }
 
