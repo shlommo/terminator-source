@@ -2,6 +2,7 @@ class UniformModel {
   constructor() {
     this.glTime = null;
     this.glResolution = null;
+    this.glAudioPower = null;
   }
 
   get time() {
@@ -18,6 +19,14 @@ class UniformModel {
 
   set resolution(glResolution) {
     this.glResolution = glResolution;
+  }
+
+  get audioPower() {
+    return this.audioPower;
+  }
+
+  set audioPower(audioPower) {
+    this.glAudioPower = audioPower;
   }
 }
 
