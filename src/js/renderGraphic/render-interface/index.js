@@ -3,7 +3,7 @@ import renderWords from './modules/render-words';
 import renderSpectrum from './modules/render-spectrum';
 import renderSquareMap from './modules/render-square-map';
 
-function renderInterface(canvasEl, audioAnalyser) {
+function renderInterface(canvasEl, audioAnalyser, audioData) {
   const canvas = canvasEl;
   const ctx = canvas.getContext('2d');
   const demo = document.querySelector('.demo');
@@ -16,19 +16,14 @@ function renderInterface(canvasEl, audioAnalyser) {
 
   const analyser = audioAnalyser;
   const analyserStartX = canvasWidth / 1.5;
-  analyser.fftSize = 1024;
-
-  const bufferLength = analyser.fftSize;
-  const dataArray = new Uint8Array(bufferLength);
 
   function render() {
     const sampleArr = randomizeText(magicBase);
     renderWords(ctx, sampleArr, fz, canvasWidth, canvasHeight);
 
-    analyser.getByteFrequencyData(dataArray);
-
+    analyser.getByteFrequencyData(audioData);
     ctx.clearRect(analyserStartX, 0, canvasWidth, canvasHeight / 2);
-    renderSpectrum(dataArray, ctx, analyserStartX);
+    renderSpectrum(audioData, ctx, analyserStartX);
 
     requestAnimationFrame(render);
   }
