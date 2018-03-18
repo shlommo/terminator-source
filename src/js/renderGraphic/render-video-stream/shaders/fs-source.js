@@ -6,6 +6,7 @@ const fsSource = `precision highp float;
                   uniform sampler2D u_texture;
                   uniform vec2 u_resolution;
                   uniform float u_time;
+                  uniform float u_audio_power;
 
                   const float interval = 3.0;
 
@@ -13,7 +14,7 @@ const fsSource = `precision highp float;
                   ${random}
 
                   void main() {
-                    float strength = smoothstep(interval * 0.5, interval, interval - mod(u_time, interval));
+                    float strength = smoothstep(interval * 0.5, interval, interval - mod(u_time + u_audio_power * 10000.0, interval));
 
                     vec2 shake = vec2(strength * 8.0 + 0.5) * vec2(
                       random(vec2(u_time)) * 2.0 - 1.0,
@@ -57,7 +58,8 @@ const fsSource = `precision highp float;
 
                     float waveNoise = (sin(v_texcoord.y * 1200.0) + 1.0) / 2.0 * (0.1 + strength * 0.1);
 
-                    gl_FragColor = vec4(grayScale, 0, 0, 1.0) * (1.0 - bnMask - bnMask2) + (whiteNoise + blockNoise + blockNoise2 - waveNoise);
+                    // gl_FragColor = vec4(grayScale, 0, 0, 1.0) * (1.0 - bnMask - bnMask2) + (whiteNoise + blockNoise + blockNoise2 - waveNoise);
+                    gl_FragColor = vec4(grayScale, 0, 0, 1.0);
                   }`;
 
 export default fsSource;
