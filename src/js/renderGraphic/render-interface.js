@@ -19,7 +19,7 @@ function renderWords(ctx, text, fz, width, height) {
   return true;
 }
 
-function renderInterface(canvasEl) {
+function renderInterface(canvasEl, audioAnalyser) {
   const canvas = canvasEl;
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
@@ -30,9 +30,18 @@ function renderInterface(canvasEl) {
   const magicBase = 22;
   // const timestamp = Date.now();
 
+  const analyser = audioAnalyser;
+  analyser.fftSize = 2048;
+
+  const bufferLength = analyser.fftSize;
+  const dataArray = new Uint8Array(bufferLength);
+
   function render() {
     const sampleArr = randomizeText(magicBase);
     renderWords(ctx, sampleArr, fz, canvasWidth, canvasHeight);
+
+    analyser.getByteTimeDomainData(dataArray);
+    // console.log(dataArray);
 
     requestAnimationFrame(render);
   }
