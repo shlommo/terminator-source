@@ -13,12 +13,21 @@ function renderGraphic(canvas, gl, video, audioAnalyser) {
     return;
   }
 
-  renderInterface(canvasBackLayer, audioAnalyser);
+  const analyser = audioAnalyser;
+  analyser.fftSize = 512;
+  const bufferLength = analyser.fftSize;
+  const dataArray = new Uint8Array(bufferLength);
+  analyser.getByteFrequencyData(dataArray);
+
+  renderInterface(canvasBackLayer, analyser, dataArray);
 
   function mainLoop(t) {
     const delta = t - PREVIOUS_T;
     PREVIOUS_T = t;
-    postprocessWebGL(canvas, gl, video, delta);
+
+    analyser.getByteFrequencyData(dataArray);
+
+    postprocessWebGL(canvas, gl, video, delta, dataArray);
     requestAnimationFrame(mainLoop);
   }
 
