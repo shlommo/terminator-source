@@ -5,8 +5,9 @@ import renderSpectrum from './render-spectrum';
 function renderInterface(canvasEl, audioAnalyser) {
   const canvas = canvasEl;
   const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  const demo = document.querySelector('.demo');
+  canvas.width = demo.offsetWidth;
+  canvas.height = demo.offsetHeight;
   const canvasWidth = canvas.width;
   const canvasHeight = canvas.height;
   const fz = 8; // font-size
