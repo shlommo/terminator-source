@@ -1,5 +1,5 @@
 import prepareWebGL from './prepare-webgl';
-import renderInterface from './render-interface';
+import renderInterface from './render-interface/index';
 import postprocessWebGL from './postprocess-webgl';
 
 

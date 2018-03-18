@@ -1,4 +1,4 @@
-import randomizeText from './utils/rondomize-text';
+import randomizeText from './../utils/rondomize-text';
 
 let it = 0;
 function renderWords(ctx, text, fz, width, height) {
