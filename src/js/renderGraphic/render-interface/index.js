@@ -1,8 +1,7 @@
-import randomizeText from './../utils/rondomize-text';
-import renderWords from './render-words';
-import renderSpectrum from './render-spectrum';
-
-import renderSquareMap from './render-square-map';
+import randomizeText from './utils/rondomize-text';
+import renderWords from './modules/render-words';
+import renderSpectrum from './modules/render-spectrum';
+import renderSquareMap from './modules/render-square-map';
 
 function renderInterface(canvasEl, audioAnalyser) {
   const canvas = canvasEl;
