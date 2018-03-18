@@ -1,12 +1,7 @@
-const uniformVars = {
-  GL_TIME_UNIFORM: null,
-  GL_RESOLUTION_UNIFORM: null
-};
-
 class UniformModel {
-  constructor(vars = uniformVars) {
-    this.glTime = vars.GL_TIME_UNIFORM;
-    this.glResolution = vars.GL_RESOLUTION_UNIFORM;
+  constructor() {
+    this.glTime = null;
+    this.glResolution = null;
   }
 
   get time() {
