@@ -19,6 +19,16 @@ function renderWords(ctx, text, fz, width, height) {
   return true;
 }
 
+function renderSpectrum(array, ctx, startX) {
+  const lineStep = 5;
+  const lineHeight = 15;
+  for (let i = 0; i < (array.length); i++) {
+    const value = array[i];
+    const lineX = i * lineStep;
+    ctx.fillRect(startX + lineX, 0 + value, 3, lineHeight);
+  }
+}
+
 function renderInterface(canvasEl, audioAnalyser) {
   const canvas = canvasEl;
   const ctx = canvas.getContext('2d');
@@ -31,7 +41,8 @@ function renderInterface(canvasEl, audioAnalyser) {
   // const timestamp = Date.now();
 
   const analyser = audioAnalyser;
-  analyser.fftSize = 2048;
+  const analyserStartX = canvasWidth / 1.5;
+  analyser.fftSize = 1024;
 
   const bufferLength = analyser.fftSize;
   const dataArray = new Uint8Array(bufferLength);
@@ -40,8 +51,11 @@ function renderInterface(canvasEl, audioAnalyser) {
     const sampleArr = randomizeText(magicBase);
     renderWords(ctx, sampleArr, fz, canvasWidth, canvasHeight);
 
-    analyser.getByteTimeDomainData(dataArray);
-    // console.log(dataArray);
+    // analyser.getByteTimeDomainData(dataArray);
+    analyser.getByteFrequencyData(dataArray);
+
+    ctx.clearRect(analyserStartX, 0, canvasWidth, canvasHeight / 2);
+    renderSpectrum(dataArray, ctx, analyserStartX);
 
     requestAnimationFrame(render);
   }
