@@ -29,7 +29,7 @@ module.exports = {
   output: {
     filename: './js/bundle.js'
   },
-  devtool: 'source-map',
+  devtool: 'eval',
   module: {
     rules: [{
       test: /\.js$/,
