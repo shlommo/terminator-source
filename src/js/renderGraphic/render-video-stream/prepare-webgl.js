@@ -25,6 +25,7 @@ function prepareWebGL(gl) {
   const texcoordLocation = gl.getAttribLocation(program, 'texture_coordinates');
   uniforms.time = gl.getUniformLocation(program, 'u_time');
   uniforms.resolution = gl.getUniformLocation(program, 'u_resolution');
+  uniforms.audioPower = gl.getUniformLocation(program, 'u_audio_power');
 
   const vsBuffer = gl.createBuffer();
   const vertices = [

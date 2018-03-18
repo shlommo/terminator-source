@@ -2,10 +2,15 @@ import UniformModel from './data/uniform-model';
 
 let GL_TIME = 0;
 const uniforms = UniformModel;
+let audioPower = 0;
 
-function postprocessWebGL(canvas, gl, sourceCanvas, delta) {
+function postprocessWebGL(canvas, gl, sourceCanvas, delta, audioData) {
   const resolution = [window.innerWidth, window.innerHeight];
   GL_TIME += delta;
+  audioPower = audioData.reduce((a, b) => a + b);
+
+  gl.uniform1f(uniforms.glAudioPower, audioPower);
+
   gl.uniform1f(uniforms.time, GL_TIME / 1000);
   gl.uniform2fv(uniforms.resolution, new Float32Array(resolution));
 
