@@ -5,7 +5,7 @@ import postprocessWebGL from './postprocess-webgl';
 
 const canvasBackLayer = document.getElementById('canvasBackLayer');
 
-function renderGraphic(canvas, gl, video) {
+function renderGraphic(canvas, gl, video, audioAnalyser) {
   let PREVIOUS_T = 0;
 
   if (!gl) {
@@ -13,7 +13,7 @@ function renderGraphic(canvas, gl, video) {
     return;
   }
 
-  renderInterface(canvasBackLayer);
+  renderInterface(canvasBackLayer, audioAnalyser);
 
   function mainLoop(t) {
     const delta = t - PREVIOUS_T;
