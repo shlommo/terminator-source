@@ -1,6 +1,6 @@
-import prepareWebGL from './prepare-webgl';
 import renderInterface from './render-interface/index';
-import postprocessWebGL from './postprocess-webgl';
+import prepareWebGL from './render-video-stream/prepare-webgl';
+import postprocessWebGL from './render-video-stream/postprocess-webgl';
 
 
 const canvasBackLayer = document.getElementById('canvasBackLayer');
